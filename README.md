@@ -31,30 +31,59 @@ print(my_pkg.sum(2, 4))
 ```
 
 ## Example 2:
-Define dummy function in C++, with std::vector and #include of external libs and call it in your script:
+Define simple functions using std::vector and including external C++ libs:
 ```python
 from swig2py import import_pkg
 
 my_pkg = import_pkg("""   
         #include <iostream>
         #include <vector> 
+        #include <numeric>
 
-        void print_std_vector() {
-            // Init vector:
-            std::vector<int> vec = {1,2,3,4,5,6};
-
-            // Print vector:             
-            for (const auto& i : vec) {
-                std::cout << i << ","; 
+        void print_vector(std::vector<int> vec) {
+            for (const auto&  i : vec) {
+                std::cout << i << ", ";
             }
             std::cout << std::endl;
         }
+        
+        int get_item(std::vector<int> vec, int index) {
+            return vec[index];
+        }
+        
+        std::vector<int> get_vector(int start, int stop) {
+            /* 
+            Equivalent to range(start, stop)
+  
+            Input  : start, stop
+            Return : std::vector<int>
+            
+            For example:
+                start = 2, stop = 5
+                return [2,3,4]
+            */
+            int size = stop - start;
+            std::vector<int> vec(size);
+            std::iota(std::begin(vec), std::end(vec), start);
+            return vec;
+        }
 
     """)
-my_pkg.print_std_vector()
+
+my_vec = my_pkg.get_vector(start=0, stop=10)
+print(my_pkg.get_item(my_vec, index=3))
+
+# Print via C++:
+my_pkg.print_vector(my_vec)
+
+# Print via Python:
+for i in my_vec:
+    print(i, end=', ')
 ```
 ```bash
-1,2,3,4,5,6,
+3
+0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 ```
 
 ## Example 3:

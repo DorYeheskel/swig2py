@@ -90,7 +90,18 @@ def write_i(pkg_name: str):
     %{{
     #include "{}.h"
     %}}
-
+    
+    %include "std_string.i"
+    %include "std_vector.i"
+    %include stl.i
+    
+    
+    namespace std {{
+        %template(IntVector)    vector<int>;
+        %template(DoubleVector) vector<double>;
+        %template(StringVector) vector<std::string>;
+    }}
+    
     %include "{}.h"
 
     """
